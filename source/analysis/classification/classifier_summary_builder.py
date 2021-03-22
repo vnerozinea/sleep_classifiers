@@ -14,6 +14,10 @@ class SleepWakeClassifierSummaryBuilder(object):
     def build_monte_carlo(attributed_classifier: AttributedClassifier, feature_sets: [[FeatureType]],
                           number_of_splits: int) -> ClassifierSummary:
         subject_ids = SubjectBuilder.get_all_subject_ids()
+
+        # Limit dataset
+        subject_ids = ['46343', '759667', '781756']
+
         subject_dictionary = SubjectBuilder.get_subject_dictionary()
 
         data_splits = TrainTestSplitter.by_fraction(subject_ids, test_fraction=0.3, number_of_splits=number_of_splits)

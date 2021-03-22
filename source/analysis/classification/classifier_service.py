@@ -3,6 +3,7 @@ from functools import partial
 from multiprocessing import Pool, cpu_count
 
 import numpy as np
+from sklearn import metrics
 from sklearn.utils import class_weight
 
 from source.analysis.classification.classifier_input_builder import ClassifierInputBuilder
@@ -49,7 +50,7 @@ class ClassifierService(object):
 
     @staticmethod
     def run_in_parallel(function, data_splits, classifier, subject_dictionary, feature_set):
-        pool = Pool(cpu_count())
+        pool = Pool(1)  # cpu_count())
 
         single_run_wrapper = partial(function,
                                      attributed_classifier=classifier,
@@ -92,7 +93,12 @@ class ClassifierService(object):
         classifier = ClassifierService.train_classifier(training_x, training_y, attributed_classifier, scoring)
         class_probabilities = classifier.predict_proba(testing_x)
 
+        _testing_y = classifier.predict(testing_x)
+
         raw_performance = RawPerformance(true_labels=testing_y, class_probabilities=class_probabilities)
+        raw_performance.precision = metrics.precision_score(testing_y, _testing_y, average=None)
+        raw_performance.recall = metrics.recall_score(testing_y, _testing_y, average=None)
+        raw_performance.accuracy = metrics.accuracy_score(testing_y, _testing_y)
 
         if Constants.VERBOSE:
             print('Completed data split in ' + str(time.time() - start_time))
@@ -111,9 +117,9 @@ class ClassifierService(object):
 
     @staticmethod
     def get_class_weights(training_y):
-        class_weights = class_weight.compute_class_weight('balanced',
-                                                          np.unique(training_y),
-                                                          training_y)
+        class_weights = class_weight.compute_class_weight(class_weight='balanced',
+                                                          classes=np.unique(training_y),
+                                                          y=training_y)
         class_weight_dict = {}
 
         if len(class_weights) == 2:

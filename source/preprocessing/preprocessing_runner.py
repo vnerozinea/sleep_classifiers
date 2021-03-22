@@ -16,7 +16,7 @@ def run_preprocessing(subject_set):
         RawDataProcessor.crop_all(str(subject))
 
     # ActivityCountService.build_activity_counts()  # This uses MATLAB, but has been replaced with a python implementation
-    # CircadianService.build_circadian_model() # Both of the circadian lines require MATLAB to run
+    # CircadianService.build_circadian_model()  # Both of the circadian lines require MATLAB to run
     # CircadianService.build_circadian_mesa()
 
     for subject in subject_set:

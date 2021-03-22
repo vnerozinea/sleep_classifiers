@@ -1,4 +1,6 @@
 import time
+import numpy as np
+from multiprocessing import freeze_support
 
 from sklearn.neural_network import MLPClassifier
 
@@ -71,6 +73,21 @@ def figures_mc_sleep_wake():
             print('Running ' + attributed_classifier.name + '...')
         classifier_summary = SleepWakeClassifierSummaryBuilder.build_monte_carlo(attributed_classifier, feature_sets,
                                                                                  trial_count)
+
+        def est_mean_results(results):
+            nr_classes = range(len(results[0].recall))
+            print(f'accuracy = {np.mean([r.accuracy for r in results])}')
+            for c in nr_classes:
+                print(f'precision, class {c} = {np.mean([r.precision[c] for r in results]):3.2f}')
+                print(f'recall,    class {c} = {np.mean([r.recall[c] for r in results]):3.2f}')
+
+        print('counts')
+        est_mean_results(classifier_summary.performance_dictionary[tuple(feature_sets[0])])
+
+        print('\ncounts + cosine')
+        est_mean_results(classifier_summary.performance_dictionary[tuple(feature_sets[1])])
+
+        # raise Exception('End')
 
         CurvePlotBuilder.make_roc_sw(classifier_summary)
         CurvePlotBuilder.make_pr_sw(classifier_summary)
@@ -181,20 +198,23 @@ def figures_compare_time_based_features():
     CurvePlotBuilder.combine_plots_as_grid(classifiers, trial_count, '_time_only_sw_roc')
 
 
-start_time = time.time()
-figure_leave_one_out_roc_and_pr()
+if __name__ == '__main__':
+    freeze_support()
 
-figures_mc_sleep_wake()
-figures_mc_three_class()
+    start_time = time.time()
+    # figure_leave_one_out_roc_and_pr()
 
-figures_leave_one_out_sleep_wake_performance()
-figures_leave_one_out_three_class_performance()
-figure_leave_one_out_roc_and_pr()
+    figures_mc_sleep_wake()
+    # figures_mc_three_class()
 
-figures_mesa_sleep_wake()
-figures_mesa_three_class()
+    # figures_leave_one_out_sleep_wake_performance()
+    # figures_leave_one_out_three_class_performance()
+    # figure_leave_one_out_roc_and_pr()
 
-figures_compare_time_based_features()
-end_time = time.time()
+    # figures_mesa_sleep_wake()
+    # figures_mesa_three_class()
 
-print('Elapsed time to generate figure: ' + str((end_time - start_time) / 60) + ' minutes')
+    # figures_compare_time_based_features()
+    end_time = time.time()
+
+    print('Elapsed time to generate figure: ' + str((end_time - start_time) / 60) + ' minutes')

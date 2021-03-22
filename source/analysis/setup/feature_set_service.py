@@ -17,6 +17,8 @@ class FeatureSetService(object):
             return 'Motion, HR, and Clock'
         if set(feature_set) == {FeatureType.count, FeatureType.heart_rate, FeatureType.cosine}:
             return 'Motion, HR, and Cosine'
+        if set(feature_set) == {FeatureType.count, FeatureType.cosine}:
+            return 'Motion and Cosine'
         if set(feature_set) == {FeatureType.count, FeatureType.heart_rate, FeatureType.time}:
             return 'Motion, HR, and Time'
 
