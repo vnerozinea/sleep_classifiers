@@ -21,15 +21,18 @@ def get_project_root() -> Path:
 
 def get_classifiers():
     return [
-        AttributedClassifier(name='Random Forest', classifier=RandomForestClassifier(n_estimators=100, max_features=1.0, max_depth=10, min_samples_split=10, min_samples_leaf=32, bootstrap=True)),
+        # AttributedClassifier(name='Random Forest', classifier=RandomForestClassifier(n_estimators=100, max_features=1.0, max_depth=10, min_samples_split=10, min_samples_leaf=32, bootstrap=True)),
         # AttributedClassifier(name='Logistic Regression', classifier=LogisticRegression(penalty='l1', solver='liblinear', verbose=0, multi_class='auto')),
         # AttributedClassifier(name='k-Nearest Neighbors', classifier=KNeighborsClassifier(weights='distance')),
-        # AttributedClassifier(name='Neural Net', classifier=MLPClassifier(activation='relu', hidden_layer_sizes=(15, 15, 15), max_iter=2000, alpha=0.01, solver='adam', verbose=False, n_iter_no_change=20))
+        AttributedClassifier(name='Neural Net', classifier=MLPClassifier(activation='relu', hidden_layer_sizes=(15, 15, 15), max_iter=2000, alpha=0.01, solver='adam', verbose=False, n_iter_no_change=20))
     ]
+
+# TODO: For keras: tf.keras.backend.set_learning_phase(0)
 
 
 def get_base_feature_sets():
-    return [[FeatureType.count],
+    return [
+            [FeatureType.count],
             # [FeatureType.heart_rate],
             # [FeatureType.count, FeatureType.heart_rate],
             # [FeatureType.count, FeatureType.heart_rate, FeatureType.cosine],

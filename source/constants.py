@@ -11,7 +11,7 @@ class Constants(object):
     SECONDS_PER_MINUTE = 60
     SECONDS_PER_DAY = 3600 * 24
     SECONDS_PER_HOUR = 3600
-    VERBOSE = False
+    VERBOSE = True
     CROPPED_FILE_PATH = utils.get_project_root().joinpath('outputs/cropped/')
     FEATURE_FILE_PATH = utils.get_project_root().joinpath('outputs/features/')
     FIGURE_FILE_PATH = utils.get_project_root().joinpath('outputs/figures/')
