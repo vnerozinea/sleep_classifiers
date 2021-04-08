@@ -121,14 +121,24 @@ class KerasClassifier:
         # self.model.summary()
 
         self.model.fit(x, y, epochs=epochs)
+
+        if self.export_all:
+            output_dir = f'{self.export_dir}/train/split_{self.split_counter:04d}'
+            if not os.path.exists(output_dir):
+                os.makedirs(output_dir)
+            np.savez(f'{output_dir}/features.npz', features=x)
+            np.savez(f'{output_dir}/classes.npz', classes=y)
+            self.split_counter += 1
+
         # print(self.model.layers[1].weights)
 
     def predict(self, x, batch_size=None, verbose=0):
         probs = self.model.predict(x, batch_size=batch_size, verbose=verbose)
         classes = [np.argmax(p) for p in probs]
         if self.export_all:
-            output_dir = f'{self.export_dir}/split_{self.split_counter:04d}'
-            os.mkdir(output_dir)
+            output_dir = f'{self.export_dir}/test/split_{self.split_counter:04d}'
+            if not os.path.exists(output_dir):
+                os.makedirs(output_dir)
             self.export(f'{output_dir}/model.h5')
             np.savez(f'{output_dir}/features.npz', features=x)
             np.savez(f'{output_dir}/probs.npz', probs=probs)
