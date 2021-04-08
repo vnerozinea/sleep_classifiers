@@ -100,7 +100,7 @@ def figures_mc_sleep_wake():
 def figures_mc_three_class():
     classifiers = utils.get_classifiers()
     feature_sets = utils.get_base_feature_sets()
-    trial_count = 20
+    trial_count = 3  # 20
 
     three_class_performance_summaries = []
     for attributed_classifier in classifiers:

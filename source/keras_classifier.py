@@ -1,4 +1,5 @@
 import os
+import shutil
 import numpy as np
 import tensorflow as tf
 
@@ -73,12 +74,18 @@ class QuantConstraint(tf.keras.constraints.Constraint):
 
 class KerasClassifier:
 
-    def __init__(self, quantize=False, num_classes=3, force_pickable=False):
+    def __init__(self, quantize=False, num_classes=3, force_pickable=False, export_all=True):
         os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 
         self.quantize = quantize
         self.num_classes = num_classes
         self.model = None
+        self.split_counter = 0
+        self.export_all = export_all
+        self.export_dir = 'exports'
+
+        if not os.path.exists(self.export_dir):
+            os.mkdir(self.export_dir)
 
         if force_pickable:
             make_keras_picklable()
@@ -117,9 +124,17 @@ class KerasClassifier:
         # print(self.model.layers[1].weights)
 
     def predict(self, x, batch_size=None, verbose=0):
-        results = self.model.predict(x, batch_size=batch_size, verbose=verbose)
-        results = [np.argmax(r) for r in results]
-        return results
+        probs = self.model.predict(x, batch_size=batch_size, verbose=verbose)
+        classes = [np.argmax(p) for p in probs]
+        if self.export_all:
+            output_dir = f'{self.export_dir}/split_{self.split_counter:04d}'
+            os.mkdir(output_dir)
+            self.export(f'{output_dir}/model.h5')
+            np.savez(f'{output_dir}/features.npz', features=x)
+            np.savez(f'{output_dir}/probs.npz', probs=probs)
+            np.savez(f'{output_dir}/classes.npz', classes=classes)
+            self.split_counter += 1
+        return classes
 
     def predict_proba(self, x, batch_size=None, verbose=0):
         return self.model.predict(x, batch_size=batch_size, verbose=verbose)

@@ -26,7 +26,7 @@ def get_classifiers():
         # AttributedClassifier(name='Logistic Regression', classifier=LogisticRegression(penalty='l1', solver='liblinear', verbose=0, multi_class='auto')),
         # AttributedClassifier(name='k-Nearest Neighbors', classifier=KNeighborsClassifier(weights='distance')),
         # AttributedClassifier(name='Neural Net', classifier=MLPClassifier(activation='relu', hidden_layer_sizes=(15, 15, 15), max_iter=2000, alpha=0.01, solver='adam', verbose=False, n_iter_no_change=20))
-        AttributedClassifier(name='Keras Neural Net', classifier=KerasClassifier(quantize=False, num_classes=3))
+        AttributedClassifier(name='Keras Neural Net', classifier=KerasClassifier(quantize=True, num_classes=3))
     ]
 
 
