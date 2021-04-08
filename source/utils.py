@@ -10,6 +10,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neural_network import MLPClassifier
+from source.keras_classifier import KerasClassifier
 
 from source.analysis.setup.attributed_classifier import AttributedClassifier
 from source.analysis.setup.feature_type import FeatureType
@@ -24,22 +25,22 @@ def get_classifiers():
         # AttributedClassifier(name='Random Forest', classifier=RandomForestClassifier(n_estimators=100, max_features=1.0, max_depth=10, min_samples_split=10, min_samples_leaf=32, bootstrap=True)),
         # AttributedClassifier(name='Logistic Regression', classifier=LogisticRegression(penalty='l1', solver='liblinear', verbose=0, multi_class='auto')),
         # AttributedClassifier(name='k-Nearest Neighbors', classifier=KNeighborsClassifier(weights='distance')),
-        AttributedClassifier(name='Neural Net', classifier=MLPClassifier(activation='relu', hidden_layer_sizes=(15, 15, 15), max_iter=2000, alpha=0.01, solver='adam', verbose=False, n_iter_no_change=20))
+        # AttributedClassifier(name='Neural Net', classifier=MLPClassifier(activation='relu', hidden_layer_sizes=(15, 15, 15), max_iter=2000, alpha=0.01, solver='adam', verbose=False, n_iter_no_change=20))
+        AttributedClassifier(name='Keras Neural Net', classifier=KerasClassifier(quantize=False, num_classes=3))
     ]
-
-# TODO: For keras: tf.keras.backend.set_learning_phase(0)
 
 
 def get_base_feature_sets():
     return [
-            [FeatureType.count],
-            # [FeatureType.heart_rate],
-            # [FeatureType.count, FeatureType.heart_rate],
-            # [FeatureType.count, FeatureType.heart_rate, FeatureType.cosine],
-            [FeatureType.count, FeatureType.cosine]]
-            # 12-23-19 note: I'm making the default base feature use cosine, not circadian model
-            # so that it doesn't require MATLAB to run.
-            # Feature set that uses cosine: [FeatureType.count, FeatureType.heart_rate, FeatureType.circadian_model]]
+        [FeatureType.count],
+        # [FeatureType.heart_rate],
+        # [FeatureType.count, FeatureType.heart_rate],
+        # [FeatureType.count, FeatureType.heart_rate, FeatureType.cosine],
+        [FeatureType.count, FeatureType.cosine]
+    ]
+    # 12-23-19 note: I'm making the default base feature use cosine, not circadian model
+    # so that it doesn't require MATLAB to run.
+    # Feature set that uses cosine: [FeatureType.count, FeatureType.heart_rate, FeatureType.circadian_model]]
 
 
 def convert_pdf_to_txt(pdf_path_string, all_texts):

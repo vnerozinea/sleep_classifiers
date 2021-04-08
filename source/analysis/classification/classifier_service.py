@@ -50,14 +50,16 @@ class ClassifierService(object):
 
     @staticmethod
     def run_in_parallel(function, data_splits, classifier, subject_dictionary, feature_set):
-        pool = Pool(1)  # cpu_count())
-
-        single_run_wrapper = partial(function,
-                                     attributed_classifier=classifier,
-                                     subject_dictionary=subject_dictionary,
-                                     feature_set=feature_set)
-
-        results = pool.map(single_run_wrapper, data_splits)
+        parallelize = False
+        if parallelize:
+            pool = Pool(1)  # cpu_count())
+            single_run_wrapper = partial(function,
+                                         attributed_classifier=classifier,
+                                         subject_dictionary=subject_dictionary,
+                                         feature_set=feature_set)
+            results = pool.map(single_run_wrapper, data_splits)
+        else:
+            results = [function(data_split, classifier, subject_dictionary, feature_set) for data_split in data_splits]
 
         return results
 
